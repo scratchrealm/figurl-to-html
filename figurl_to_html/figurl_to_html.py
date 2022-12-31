@@ -130,7 +130,7 @@ def _http_get(url: str):
 
 def _download_view(view_uri: str, *, output_dir: str):
     if view_uri.startswith('sha1://') or view_uri.startswith('zenodo://') or view_uri.startswith('zenodo-sandbox://'):
-        view_fname = f'{output_dir}/view/index.html'
+        view_fname = f'{output_dir}/index.html'
         print(f'Writing {view_fname}')
         kcl.load_file(view_uri, dest=view_fname)
     elif view_uri.startswith('gs://'):
@@ -138,10 +138,14 @@ def _download_view(view_uri: str, *, output_dir: str):
         url = f'https://storage.googleapis.com/{p}'
         index_html = _http_get(f'{url}/index.html')
         _write_file(f'{output_dir}/index.html', index_html)
+        manifest_json = _http_get(f'{url}/manifest.json')
+        _write_file(f'{output_dir}/manifest.json', manifest_json)
         asset_manifest_json = _http_get(f'{url}/asset-manifest.json')
         _write_file(f'{output_dir}/asset-manifest.json', asset_manifest_json)
         asset_manifest = json.loads(asset_manifest_json)
         for k, f in asset_manifest['files'].items():
+            if f.startswith('/'):
+                f = f[1:]
             url_src = f'{url}/{f}'
             pp_dst = f'{output_dir}/{f}'
             os.makedirs(os.path.dirname(pp_dst), exist_ok=True)

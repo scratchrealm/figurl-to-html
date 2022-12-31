@@ -14,7 +14,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'figurl-to-html=figurl_to_html.figurl_to_html_cli:figurl_to_html_cli'
+            'figurl-to-html=figurl_to_html.cli:cli'
         ]
     }
 )
