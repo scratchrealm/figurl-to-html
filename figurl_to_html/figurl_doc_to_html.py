@@ -59,7 +59,7 @@ def figurl_doc_to_html(*,
     print('Downloading doc-figurl')
     _download_view('gs://figurl/doc-figurl', output_dir=output_dir)
 
-    print('Writing figurl.json')
+    print(f'Writing {output_dir}/figurl.json')
     figurl_json = {
         'figurlToHtml': True
     }
