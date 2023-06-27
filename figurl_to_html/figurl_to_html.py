@@ -54,8 +54,13 @@ def figurl_to_html(*,
 def _get_dependent_uris_recursive(*, uri: str):
     ret: List[str] = []
     ret.append(uri)
-    a = kcl.load_text(uri)
+    print(f'Loading {uri}')
+    path = kcl.load_file(uri)
+    if path is None:
+        return ret
     try:
+        with open(path, 'r') as f:
+            a = f.read()
         b = json.loads(a)
     except:
         b = None
@@ -131,7 +136,7 @@ def _http_get(url: str):
 def _download_view(view_uri: str, *, output_dir: str):
     if view_uri.startswith('sha1://') or view_uri.startswith('zenodo://') or view_uri.startswith('zenodo-sandbox://'):
         view_fname = f'{output_dir}/index.html'
-        print(f'Writing {view_fname}')
+        print(f'Loading and writing {view_uri} {view_fname}')
         kcl.load_file(view_uri, dest=view_fname)
     elif view_uri.startswith('gs://'):
         p = view_uri[len("gs://"):]

@@ -21,6 +21,7 @@ async function httpGetAsync(url) {
     })
 }
 async function loadFile(uri) {
+    console.info(`Loading file: ${uri}`)
     if (!uri.startsWith('sha1://')) {
         throw Error(`Unexpected URI: ${uri}`)
     }
@@ -225,6 +226,15 @@ async function main() {
             return {
                 type: 'getFileData',
                 fileData
+            }
+        }
+        else if (req.type === 'getFileDataUrl') {
+            const a = req.uri.split('?')[0].split('/')
+            const sha1 = a[2]
+            const url0 = `../sha1/${sha1}` // assuming the plugin visualization is served from the view directory
+            return {
+                type: 'getFileDataUrl',
+                fileDataUrl: url0
             }
         }
         else return undefined
